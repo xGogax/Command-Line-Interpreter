@@ -1,5 +1,7 @@
 #include "Interpreter.h"
 
+string Interpreter::commandPrompt = "$";
+
 string Interpreter::getNextLine() {
     char input[513];
 
@@ -47,4 +49,8 @@ void Interpreter::removeMultipleSpaces(string &input) {
 
 string Interpreter::getCommandPrompt(string commandPrompt) {
     return commandPrompt + " ";
+}
+
+void Interpreter::setCommandPrompt(string commandPrompt) {
+    this->commandPrompt = commandPrompt;
 }

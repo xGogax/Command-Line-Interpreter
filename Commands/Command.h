@@ -22,6 +22,13 @@ protected:
 
     virtual string execute(string argument) = 0;
     virtual string checkOption(string opt) = 0;
+
+    virtual string checkCreateFile(string createFile) {
+        return "";
+    }
+    virtual string checkArgument(string argument) {
+        return "";
+    }
 private:
 };
 

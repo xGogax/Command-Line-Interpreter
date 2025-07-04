@@ -33,8 +33,9 @@ public:
     };
 
     string getCommandPrompt(string commandPrompt);
+    void setCommandPrompt(string commandPrompt);
 private:
-    string commandPrompt = "$";
+    static string commandPrompt;
 
     string getNextLine();
     void removeMultipleSpaces(string &input);

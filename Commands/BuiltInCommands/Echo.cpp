@@ -1,7 +1,7 @@
 #include "Echo.h"
 
 string Echo::execute(string argument) {
-    return argument + '\n';
+    return argument;
 }
 
 string Echo::checkOption(string opt) {
@@ -9,5 +9,5 @@ string Echo::checkOption(string opt) {
         return opt;
     }
 
-    return "ERROR" + '\n';
+    return "ERROR";
 }

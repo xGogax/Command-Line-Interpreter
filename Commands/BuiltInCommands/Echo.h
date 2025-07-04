@@ -8,7 +8,7 @@ using namespace std;
 class Echo : public Command {
 public:
     Echo(string opt, string arg, string createFile)
-    : Command(opt, arg, createFile) {};
+    : Command(opt, arg, createFile) {}
 
 protected:
     string execute(string argument) override;

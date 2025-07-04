@@ -1,10 +1,11 @@
-#ifndef TIME_H
-#define TIME_H
+#ifndef DATE_H
+#define DATE_H
+
 #include "../Command.h"
 
-class Time : public Command{
+class Date : public Command {
 public:
-    Time(string opt, string argument, string createFile)
+    Date(string opt, string argument, string createFile)
     : Command(opt, argument, createFile){};
 
 protected:

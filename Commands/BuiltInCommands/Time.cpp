@@ -23,5 +23,12 @@ string Time::checkOption(string opt) {
         return opt;
     }
     //ERROR
-    return "ERROR" + '\n';
+    return "ERROR";
+}
+
+string Time::checkArgument(string argument) {
+    if(argument.empty()) {
+        return "";
+    }
+    return "ERROR";
 }
