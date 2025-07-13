@@ -148,3 +148,61 @@ string Parser::getMultipleLines() {
 
     return result;
 }
+
+string Parser::getTRArguments(string &line) {
+    size_t firstQuote = line.find('"');
+
+    string input;
+    string what, with;
+
+    if (firstQuote == 0) {
+        // Format: "Hello World" "Hello" "Hi" or "Hello World" "Hello"
+        size_t secondQuote = line.find('"', firstQuote + 1);
+        if (secondQuote == string::npos) return "ERROR";
+        input = line.substr(firstQuote + 1, secondQuote - firstQuote - 1);
+
+        size_t thirdQuote = line.find('"', secondQuote + 1);
+        size_t fourthQuote = line.find('"', thirdQuote + 1);
+        if (thirdQuote == string::npos || fourthQuote == string::npos) return "ERROR";
+        what = line.substr(thirdQuote + 1, fourthQuote - thirdQuote - 1);
+
+        size_t fifthQuote = line.find('"', fourthQuote + 1);
+        if (fifthQuote == string::npos) {
+            // nema with
+            with = "";
+        } else {
+            size_t sixthQuote = line.find('"', fifthQuote + 1);
+            if (sixthQuote == string::npos) return "ERROR";
+            with = line.substr(fifthQuote + 1, sixthQuote - fifthQuote - 1);
+        }
+    } else {
+        // Format: input.txt "Hello" "Hi" or input.txt "Hello"
+        size_t space = line.find(' ');
+        if (space == string::npos) return "ERROR";
+        string fileName = line.substr(0, space);
+        ifstream in(fileName);
+        if (!in.is_open()) return "ERROR";
+        stringstream buffer;
+        buffer << in.rdbuf();
+        input = buffer.str();
+        in.close();
+        line = line.substr(space + 1); // Remove filename from line
+
+        size_t firstQ = line.find('"');
+        size_t secondQ = line.find('"', firstQ + 1);
+        if (firstQ == string::npos || secondQ == string::npos) return "ERROR";
+        what = line.substr(firstQ + 1, secondQ - firstQ - 1);
+
+        size_t thirdQ = line.find('"', secondQ + 1);
+        if (thirdQ == string::npos) {
+            // nema with
+            with = "";
+        } else {
+            size_t fourthQ = line.find('"', thirdQ + 1);
+            if (fourthQ == string::npos) return "ERROR";
+            with = line.substr(thirdQ + 1, fourthQ - thirdQ - 1);
+        }
+    }
+
+    return "[" + input + "]" + " \"" + what + "\" \"" + with + "\"";
+}

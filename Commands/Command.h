@@ -10,6 +10,7 @@ public:
     Command(string opt, string arg, string createFile) :
     opt(opt),
     arg(arg),
+
     createFile(createFile) {}
 
     virtual ~Command() = default;
@@ -28,6 +29,11 @@ protected:
     }
     virtual string checkArgument(string argument) {
         return "";
+    }
+
+
+    virtual bool shouldOverwriteFile() const {
+        return false;
     }
 private:
 };

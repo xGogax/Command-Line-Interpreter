@@ -25,4 +25,6 @@ add_executable(CommandLineInterpreter main.cpp
         Commands/BuiltInCommands/Truncate.cpp
         Commands/BuiltInCommands/Truncate.h
         Commands/BuiltInCommands/RM.cpp
-        Commands/BuiltInCommands/RM.h)
+        Commands/BuiltInCommands/RM.h
+        Commands/BuiltInCommands/TR.cpp
+        Commands/BuiltInCommands/TR.h)

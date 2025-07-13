@@ -14,6 +14,7 @@
 #include "../Commands/BuiltInCommands/Prompt.h"
 #include "../Commands/BuiltInCommands/Truncate.h"
 #include "../Commands/BuiltInCommands/RM.h"
+#include "../Commands/BuiltInCommands/TR.h"
 
 using namespace std;
 
@@ -30,7 +31,7 @@ public:
         createFile = getOutputFile(line);
 
         bool readFileContent = !(command == "touch" || command == "truncate" || command == "rm");
-        argument = getArgument(line, readFileContent);
+        if (command != "tr") argument = getArgument(line, readFileContent);
         if (argument == "ERROR") return nullptr;
 
         if(command == "echo") {
@@ -59,6 +60,28 @@ public:
         } else if (command == "rm") {
             RM* rm = new RM(option, argument, createFile);
             return rm;
+        } else if (command == "tr") {
+            string fileCandidate;
+            size_t spacePos = line.find(' ');
+            if (spacePos != string::npos) {
+                string firstToken = line.substr(0, spacePos);
+                if (!firstToken.empty() && firstToken[0] != '"') {
+                    ifstream testFile(firstToken);
+                    if (testFile.is_open()) {
+                        fileCandidate = firstToken;
+                        testFile.close();
+                    }
+                }
+            }
+
+            argument = getTRArguments(line);
+
+            if (createFile.empty() && !fileCandidate.empty()) {
+                createFile = fileCandidate;
+            }
+
+            TR* tr = new TR(option, argument, createFile);
+            return tr;
         }
         return nullptr;
     };
@@ -70,6 +93,8 @@ private:
     static string getArgument(string& line, bool fileContent);
 
     static string getMultipleLines();
+
+    static string getTRArguments(string& line);
 };
 
 #endif
