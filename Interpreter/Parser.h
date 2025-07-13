@@ -16,6 +16,7 @@
 #include "../Commands/BuiltInCommands/RM.h"
 #include "../Commands/BuiltInCommands/TR.h"
 #include "../Commands/BuiltInCommands/Head.h"
+#include "../Commands/BuiltInCommands/Batch.h"
 
 using namespace std;
 
@@ -86,6 +87,10 @@ public:
         } else if (command == "head") {
             Head* head = new Head(option, argument, createFile);
             return head;
+        } else if (command == "batch") {
+            if (argument == "")  argument = getMultipleLines();
+            Batch* batch = new Batch(option, argument, createFile);
+            return batch;
         }
         return nullptr;
     };
