@@ -123,7 +123,7 @@ string Parser::getArgument(string &line, bool fileContent) {
 
         while (getline(file, lineFromFile)) {
             if (!fileData.empty()) {
-                fileData += ' ';
+                fileData += '\n';
             }
             fileData += lineFromFile;
         }

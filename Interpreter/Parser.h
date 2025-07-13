@@ -15,6 +15,7 @@
 #include "../Commands/BuiltInCommands/Truncate.h"
 #include "../Commands/BuiltInCommands/RM.h"
 #include "../Commands/BuiltInCommands/TR.h"
+#include "../Commands/BuiltInCommands/Head.h"
 
 using namespace std;
 
@@ -82,6 +83,9 @@ public:
 
             TR* tr = new TR(option, argument, createFile);
             return tr;
+        } else if (command == "head") {
+            Head* head = new Head(option, argument, createFile);
+            return head;
         }
         return nullptr;
     };
