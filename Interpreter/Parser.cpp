@@ -1,5 +1,78 @@
 #include "Parser.h"
 
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <string>
+
+bool pipe = false;
+
+void Parser::pipeSystem(string& line) {
+    vector<string> segments;
+
+    stringstream ss(line);
+    string segment;
+
+    while (getline(ss, segment, '|')) {
+        size_t start = segment.find_first_not_of(" \t");
+        size_t end = segment.find_last_not_of(" \t");
+        if (start != std::string::npos && end != std::string::npos)
+            segment = segment.substr(start, end - start + 1);
+        else
+            segment = "";
+
+        segments.push_back(segment);
+    }
+
+    string newArg = "";
+    for (size_t i = 0; i < segments.size(); i++) {
+        size_t firstSpace = segments[i].find(' ');
+        size_t secondSpace = (firstSpace == std::string::npos) ? std::string::npos : segments[i].find(' ', firstSpace + 1);
+
+        string option = tryOption(segments[i]);
+        bool hasOption = (option != "");
+        bool isFirstSegment = (i == 0);
+
+        if (hasOption && !isFirstSegment) {
+            // Ubacivanje sa navodnicima, na mesto posle secondSpace ili na kraj ako ne postoji
+            if (secondSpace != std::string::npos) {
+                segments[i].insert(secondSpace + 1, "\"" + newArg + "\"" + " ");
+            } else {
+                segments[i] += " \"" + newArg + "\"";
+            }
+        } else if (!hasOption && !isFirstSegment) {
+            // Ubacivanje sa navodnicima, na mesto posle firstSpace ili na kraj ako ne postoji
+            if (firstSpace != std::string::npos) {
+                segments[i].insert(firstSpace + 1, "\"" + newArg + "\"" + " ");
+            } else {
+                segments[i] += " \"" + newArg + "\"";
+            }
+        } else if (hasOption && isFirstSegment) {
+            // Ubacivanje bez navodnika, na mesto posle secondSpace ili na kraj ako ne postoji
+            if (secondSpace != std::string::npos) {
+                segments[i].insert(secondSpace + 1, newArg);
+            } else {
+                segments[i] += " " + newArg;
+            }
+        } else {
+            // Ubacivanje bez navodnika, na mesto posle firstSpace ili na kraj ako ne postoji
+            if (firstSpace != std::string::npos) {
+                segments[i].insert(firstSpace + 1, newArg);
+            } else {
+                segments[i] += " " + newArg;
+            }
+        }
+
+        Command* command = Parser::parse(segments[i]);
+        if (i == segments.size() - 1) {
+            cout << command->execute() << endl;
+        } else {
+            newArg = command->execute();
+        }
+        delete command;
+    }
+}
+
 string Parser::getCommand(string& line) {
     size_t pos = line.find(' ');
     string returnValue;
@@ -14,6 +87,25 @@ string Parser::getCommand(string& line) {
 
     return returnValue;
 }
+
+string Parser::tryOption(const string& line) {
+    bool inQuotes = false;
+    stringstream ss(line);
+    string token;
+
+    while (ss >> token) {
+        for (char c : token) {
+            if (c == '"') inQuotes = !inQuotes;
+        }
+        if (!inQuotes && token.size() > 1 && token[0] == '-') {
+            return token;
+        }
+    }
+
+    return "";
+}
+
+
 
 string Parser::getOption(string &line) {
     if (line.empty()) return "";

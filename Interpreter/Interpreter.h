@@ -27,7 +27,9 @@ public:
 
             command = Parser::parse(input);
 
-            cout << command->execute() << endl;
+            if (command != nullptr) {
+                cout << command->execute() << endl;
+            }
         }
         delete command;
     };

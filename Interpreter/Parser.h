@@ -22,11 +22,14 @@ using namespace std;
 
 class Parser {
 public:
-    static Command* parse(string& line) {
+    static Command* parse(string& line, string argument = "", string createFile = "") {
+        if (line.find('|') != string::npos) {
+            pipeSystem(line);
+            return nullptr;
+        }
+
         string command;
         string option;
-        string argument;
-        string createFile;
 
         command = getCommand(line);
         option = getOption(line);
@@ -95,8 +98,13 @@ public:
         return nullptr;
     };
 
+    static void pipeSystem(string& line);
 private:
+
     static string getCommand(string& line);
+
+    static string tryOption(const string &line);
+
     static string getOption(string& line);
     static string getOutputFile(string& line);
     static string getArgument(string& line, bool fileContent);

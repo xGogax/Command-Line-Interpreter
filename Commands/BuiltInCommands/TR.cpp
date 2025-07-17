@@ -32,18 +32,32 @@ string TR::execute(string argument) {
         with = argument.substr(thirdQuote + 1, fourthQuote - thirdQuote - 1);
     }
 
-    stringstream ss(input);
-    string token;
     string result;
-    bool first = true;
 
-    while (ss >> token) {
-        if (token == what) {
-            token = with;
+    if (what.length() == 1) {
+        // Zamena karaktera
+        char target = what[0];
+        for (char c : input) {
+            if (c == target) {
+                result += with;
+            } else {
+                result += c;
+            }
         }
-        if (!first) result += " ";
-        result += token;
-        first = false;
+    } else {
+        // Zamena reci
+        stringstream ss(input);
+        string token;
+        bool first = true;
+
+        while (ss >> token) {
+            if (token == what) {
+                token = with;
+            }
+            if (!first) result += " ";
+            result += token;
+            first = false;
+        }
     }
 
     return result;
