@@ -40,7 +40,7 @@ public:
         if (argument == "ERROR") return nullptr;
 
         if(command == "echo") {
-            if (argument == "")  argument = getMultipleLines();
+            if (argument == "" && emptyFile == false)  {emptyFile = false; argument = getMultipleLines();}
             Echo* echo = new Echo(option, argument, createFile);
             return echo;
         } else if (command == "time") {
@@ -88,6 +88,7 @@ public:
             TR* tr = new TR(option, argument, createFile);
             return tr;
         } else if (command == "head") {
+            if (argument == "") argument = getMultipleLines();
             Head* head = new Head(option, argument, createFile);
             return head;
         } else if (command == "batch") {
@@ -112,6 +113,8 @@ private:
     static string getMultipleLines();
 
     static string getTRArguments(string& line);
+
+    static bool emptyFile;
 };
 
 #endif

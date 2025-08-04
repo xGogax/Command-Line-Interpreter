@@ -7,6 +7,8 @@
 
 bool pipe = false;
 
+bool Parser::emptyFile = false;
+
 void Parser::pipeSystem(string& line) {
     vector<string> segments;
 
@@ -140,33 +142,31 @@ string Parser::getOutputFile(string &line) {
     if (line.empty()) return "";
 
     bool inQuotes = false;
-    int lastSpacePos = -1;
+    int gtPos = -1;
 
     for (int i = 0; i < line.length(); i++) {
         if (line[i] == '"') {
             inQuotes = !inQuotes;
-        } else if (line[i] == ' ' && !inQuotes) {
-            lastSpacePos = i;
+        } else if (line[i] == '>' && !inQuotes) {
+            gtPos = i;
+            break;
         }
     }
 
-    string lastWord;
-    if (lastSpacePos != -1) {
-        lastWord = line.substr(lastSpacePos + 1);
-    } else {
-        lastWord = line;
-    }
-
-    if (!lastWord.empty() && lastWord[0] == '>') {
-        string fileName = lastWord.substr(1);
-
-        if (lastSpacePos != -1) {
-            line.erase(lastSpacePos);
-        } else {
-            line.clear();
+    if (gtPos != -1) {
+        int arrowLen = 1;
+        if (gtPos + 1 < line.length() && line[gtPos + 1] == '>') {
+            arrowLen = 2;
         }
 
-        return fileName;
+        int i = gtPos + arrowLen;
+        while (i < line.length() && line[i] == ' ') i++;
+
+        if (i < line.length()) {
+            string fileName = line.substr(i);
+            line.erase(gtPos);
+            return string(gtPos + arrowLen == gtPos + 2 ? ">> " : "> ") + fileName;
+        }
     }
 
     return "";
@@ -175,6 +175,7 @@ string Parser::getOutputFile(string &line) {
 string Parser::getArgument(string &line, bool fileContent) {
     if (line.empty()) return "";
 
+    // " "
     if (line[0] == '"') {
         size_t firstQuote = line.find('"');
         size_t lastQuote = line.find_last_of('"');
@@ -184,7 +185,6 @@ string Parser::getArgument(string &line, bool fileContent) {
         }
 
         string argument = line.substr(firstQuote + 1, lastQuote - firstQuote - 1);
-
         line.erase(0, lastQuote + 1);
 
         if (!line.empty() && line[0] == ' ') {
@@ -194,13 +194,44 @@ string Parser::getArgument(string &line, bool fileContent) {
         return argument;
     }
 
-    // Ako je file argument
+    emptyFile = true;
+    // <file.txt or < file.txt
     string fileName = line;
 
-    if (line[0] == '>') {
-        fileName = line.substr(1);
+    if (line[0] == '<') {
+        // preskoči <
+        size_t i = 1;
+        while (i < line.length() && line[i] == ' ') i++;
+
+        fileName = line.substr(i);
+        line.clear();
+
+        if (fileContent) {
+            ifstream file(fileName);
+            if (!file.is_open()) {
+                cerr << "ERROR: Unable to open file " << fileName << endl;
+                return "ERROR";
+            }
+
+            string fileData;
+            string lineFromFile;
+
+            while (getline(file, lineFromFile)) {
+                if (!fileData.empty()) {
+                    fileData += '\n';
+                }
+                fileData += lineFromFile;
+            }
+
+            file.close();
+            return fileData;
+        } else {
+            return fileName;
+        }
     }
 
+    //file
+    fileName = line;
     line.clear();
 
     if (fileContent) {
@@ -221,7 +252,6 @@ string Parser::getArgument(string &line, bool fileContent) {
         }
 
         file.close();
-
         return fileData;
     } else {
         return fileName;

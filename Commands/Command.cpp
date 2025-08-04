@@ -14,15 +14,17 @@ string Command::execute() {
     string result = execute(arg);
     ofstream file;
 
-    if (filesystem::exists(createFile)) {
-        if (shouldOverwriteFile()) {
-            file.open(createFile); //overwrite
-        } else {
-            file.open(createFile, ios::app); //append
-            file << endl;
-        }
+    string redirection = createFile.substr(0, 2);
+    string actualFile;
+
+    if (redirection == ">>") {
+        actualFile = createFile.substr(3); // ">> "
+        file.open(actualFile, ios::app);   // append
+    } else if (createFile[0] == '>') {
+        actualFile = createFile.substr(2); // "> "
+        file.open(actualFile);             // overwrite
     } else {
-        file.open(createFile);
+        return "ERROR: invalid redirection format";
     }
 
     if (!file.is_open()) {
