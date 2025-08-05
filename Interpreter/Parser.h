@@ -14,7 +14,6 @@
 #include "../Commands/BuiltInCommands/Prompt.h"
 #include "../Commands/BuiltInCommands/Truncate.h"
 #include "../Commands/BuiltInCommands/RM.h"
-#include "../Commands/BuiltInCommands/TR.h"
 #include "../Commands/BuiltInCommands/Head.h"
 #include "../Commands/BuiltInCommands/Batch.h"
 
@@ -66,27 +65,7 @@ public:
             RM* rm = new RM(option, argument, createFile);
             return rm;
         } else if (command == "tr") {
-            string fileCandidate;
-            size_t spacePos = line.find(' ');
-            if (spacePos != string::npos) {
-                string firstToken = line.substr(0, spacePos);
-                if (!firstToken.empty() && firstToken[0] != '"') {
-                    ifstream testFile(firstToken);
-                    if (testFile.is_open()) {
-                        fileCandidate = firstToken;
-                        testFile.close();
-                    }
-                }
-            }
 
-            argument = getTRArguments(line);
-
-            if (createFile.empty() && !fileCandidate.empty()) {
-                createFile = fileCandidate;
-            }
-
-            TR* tr = new TR(option, argument, createFile);
-            return tr;
         } else if (command == "head") {
             if (argument == "") argument = getMultipleLines();
             Head* head = new Head(option, argument, createFile);
@@ -111,8 +90,6 @@ private:
     static string getArgument(string& line, bool fileContent);
 
     static string getMultipleLines();
-
-    static string getTRArguments(string& line);
 
     static bool emptyFile;
 };
