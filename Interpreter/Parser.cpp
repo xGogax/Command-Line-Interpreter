@@ -270,3 +270,99 @@ string Parser::getMultipleLines() {
 
     return result;
 }
+
+string* Parser::getTRArguments(string &line, bool fileContent) {
+    string* args = new string[3]{"", "", ""}; // input, what, with
+    vector<size_t> quotePositions;
+
+    for (size_t i = 0; i < line.length(); ++i) {
+        if (line[i] == '"' && (i == 0 || line[i - 1] != '\\')) {
+            quotePositions.push_back(i);
+        }
+    }
+
+    // Ako ima najmanje 4 navodnika - what i with postoje
+    if (quotePositions.size() >= 4) {
+        size_t q_with_close = quotePositions.back(); quotePositions.pop_back();
+        size_t q_with_open = quotePositions.back(); quotePositions.pop_back();
+        args[2] = line.substr(q_with_open + 1, q_with_close - q_with_open - 1);
+        line.erase(q_with_open, q_with_close - q_with_open + 1);
+
+        size_t q_what_close = quotePositions.back(); quotePositions.pop_back();
+        size_t q_what_open = quotePositions.back(); quotePositions.pop_back();
+        args[1] = line.substr(q_what_open + 1, q_what_close - q_what_open - 1);
+        line.erase(q_what_open, q_what_close - q_what_open + 1);
+    }
+
+    // Ako ima tacno 2 navodnika - samo what postoji
+    else if (quotePositions.size() == 2) {
+        size_t q_what_close = quotePositions.back(); quotePositions.pop_back();
+        size_t q_what_open = quotePositions.back(); quotePositions.pop_back();
+        args[1] = line.substr(q_what_open + 1, q_what_close - q_what_open - 1);
+        line.erase(q_what_open, q_what_close - q_what_open + 1);
+    }
+
+    // Ocisti visak razmaka
+    while (!line.empty() && (line[0] == ' ' || line[0] == '\t')) line.erase(0, 1);
+    while (!line.empty() && (line.back() == ' ' || line.back() == '\t')) line.pop_back();
+
+    // Ako input postoji, obradi ga (moze biti string, <fajl ili ime fajla)
+    if (!line.empty()) {
+        if (line[0] == '"' && line.back() == '"') {
+            args[0] = line.substr(1, line.length() - 2);
+        } else if (line[0] == '<') {
+            size_t i = 1;
+            while (i < line.length() && line[i] == ' ') i++;
+            string fileName = line.substr(i);
+            if (fileContent) {
+                ifstream file(fileName);
+                if (!file.is_open()) {
+                    cerr << "ERROR: Unable to open file " << fileName << endl;
+                    args[0] = "ERROR";
+                    return args;
+                }
+                string fileData, temp;
+                while (getline(file, temp)) {
+                    if (!fileData.empty()) fileData += '\n';
+                    fileData += temp;
+                }
+                file.close();
+                args[0] = fileData;
+            } else {
+                args[0] = fileName;
+            }
+        } else {
+            if (fileContent) {
+                ifstream file(line);
+                if (!file.is_open()) {
+                    cerr << "ERROR: Unable to open file " << line << endl;
+                    args[0] = "ERROR";
+                    return args;
+                }
+                string fileData, temp;
+                while (getline(file, temp)) {
+                    if (!fileData.empty()) fileData += '\n';
+                    fileData += temp;
+                }
+
+                if (!fileData.empty()) {
+                    emptyFile = false;
+                }
+
+                file.close();
+                args[0] = fileData;
+            } else {
+                args[0] = line;
+            }
+        }
+    }
+
+    // Ako je input prazan, a what i with nisu, izvrsi shift left
+    if (args[0].empty() && !args[1].empty() && !args[2].empty()) {
+        args[0] = args[1];
+        args[1] = args[2];
+        args[2] = "";
+    }
+
+    return args;
+}

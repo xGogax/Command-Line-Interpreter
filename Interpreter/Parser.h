@@ -39,7 +39,7 @@ public:
         if (argument == "ERROR") return nullptr;
 
         if(command == "echo") {
-            if (argument == "" && emptyFile == false)  {emptyFile = false; argument = getMultipleLines();}
+            if (argument == "" && emptyFile == false)  {emptyFile = true; argument = getMultipleLines();}
             Echo* echo = new Echo(option, argument, createFile);
             return echo;
         } else if (command == "time") {
@@ -52,7 +52,7 @@ public:
             Touch* touch = new Touch(option, argument, createFile);
             return touch;
         } else if (command == "wc") {
-            if (argument == "") argument = getMultipleLines();
+            if (argument == "" && emptyFile == false) {emptyFile = true; argument = getMultipleLines();}
             WC* wc = new WC(option, argument, createFile);
             return wc;
         } else if (command == "prompt") {
@@ -65,13 +65,15 @@ public:
             RM* rm = new RM(option, argument, createFile);
             return rm;
         } else if (command == "tr") {
+            string* arguments = getTRArguments(line, readFileContent);
+            if(arguments[0].empty() && !arguments[1].empty() && emptyFile == false) {emptyFile = true; arguments[0] = getMultipleLines();}
 
         } else if (command == "head") {
             if (argument == "") argument = getMultipleLines();
             Head* head = new Head(option, argument, createFile);
             return head;
         } else if (command == "batch") {
-            if (argument == "")  argument = getMultipleLines();
+            if (argument == "" && emptyFile == false) {emptyFile = true; argument = getMultipleLines();}
             Batch* batch = new Batch(option, argument, createFile);
             return batch;
         }
@@ -88,6 +90,8 @@ private:
     static string getOption(string& line);
     static string getOutputFile(string& line);
     static string getArgument(string& line, bool fileContent);
+
+    static string* getTRArguments(string& line, bool fileContent);
 
     static string getMultipleLines();
 
