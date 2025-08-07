@@ -16,6 +16,7 @@
 #include "../Commands/BuiltInCommands/RM.h"
 #include "../Commands/BuiltInCommands/Head.h"
 #include "../Commands/BuiltInCommands/Batch.h"
+#include "../Commands/BuiltInCommands/TR.h"
 
 using namespace std;
 
@@ -67,7 +68,8 @@ public:
         } else if (command == "tr") {
             string* arguments = getTRArguments(line, readFileContent);
             if(arguments[0].empty() && !arguments[1].empty() && emptyFile == false) {emptyFile = true; arguments[0] = getMultipleLines();}
-
+            TR* tr = new TR(option, arguments[0], createFile, arguments[1], arguments[2]);
+            return tr;
         } else if (command == "head") {
             if (argument == "") argument = getMultipleLines();
             Head* head = new Head(option, argument, createFile);

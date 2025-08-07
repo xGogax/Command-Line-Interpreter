@@ -29,4 +29,6 @@ add_executable(CommandLineInterpreter main.cpp
         Commands/BuiltInCommands/Head.cpp
         Commands/BuiltInCommands/Head.h
         Commands/BuiltInCommands/Batch.cpp
-        Commands/BuiltInCommands/Batch.h)
+        Commands/BuiltInCommands/Batch.h
+        Commands/BuiltInCommands/TR.cpp
+        Commands/BuiltInCommands/TR.h)
