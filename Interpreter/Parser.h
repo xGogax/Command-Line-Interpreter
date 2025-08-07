@@ -23,6 +23,7 @@ using namespace std;
 class Parser {
 public:
     static Command* parse(string& line, string argument = "", string createFile = "") {
+        emptyFile = true;
         if (line.find('|') != string::npos) {
             pipeSystem(line);
             return nullptr;
@@ -40,7 +41,7 @@ public:
         if (argument == "ERROR") return nullptr;
 
         if(command == "echo") {
-            if (argument == "" && emptyFile == false)  {emptyFile = true; argument = getMultipleLines();}
+            if (argument == "" && emptyFile) argument = getMultipleLines();
             Echo* echo = new Echo(option, argument, createFile);
             return echo;
         } else if (command == "time") {
@@ -53,7 +54,7 @@ public:
             Touch* touch = new Touch(option, argument, createFile);
             return touch;
         } else if (command == "wc") {
-            if (argument == "" && emptyFile == false) {emptyFile = true; argument = getMultipleLines();}
+            if (argument == "" && emptyFile) argument = getMultipleLines();
             WC* wc = new WC(option, argument, createFile);
             return wc;
         } else if (command == "prompt") {
@@ -67,15 +68,15 @@ public:
             return rm;
         } else if (command == "tr") {
             string* arguments = getTRArguments(line, readFileContent);
-            if(arguments[0].empty() && !arguments[1].empty() && emptyFile == false) {emptyFile = true; arguments[0] = getMultipleLines();}
+            if(arguments[0].empty() && emptyFile) arguments[0] = getMultipleLines();
             TR* tr = new TR(option, arguments[0], createFile, arguments[1], arguments[2]);
             return tr;
         } else if (command == "head") {
-            if (argument == "") argument = getMultipleLines();
+            if (argument == "" && emptyFile) argument = getMultipleLines();
             Head* head = new Head(option, argument, createFile);
             return head;
         } else if (command == "batch") {
-            if (argument == "" && emptyFile == false) {emptyFile = true; argument = getMultipleLines();}
+            if (argument == "") argument = getMultipleLines();
             Batch* batch = new Batch(option, argument, createFile);
             return batch;
         }

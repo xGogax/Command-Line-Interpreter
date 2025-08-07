@@ -194,7 +194,6 @@ string Parser::getArgument(string &line, bool fileContent) {
         return argument;
     }
 
-    emptyFile = true;
     // <file.txt or < file.txt
     string fileName = line;
 
@@ -224,6 +223,11 @@ string Parser::getArgument(string &line, bool fileContent) {
             }
 
             file.close();
+
+            if (fileData.empty()) {
+                emptyFile = false;
+            }
+
             return fileData;
         } else {
             return fileName;
@@ -249,6 +253,10 @@ string Parser::getArgument(string &line, bool fileContent) {
                 fileData += '\n';
             }
             fileData += lineFromFile;
+        }
+
+        if (fileData.empty()) {
+            emptyFile = false;
         }
 
         file.close();
@@ -345,7 +353,7 @@ string* Parser::getTRArguments(string &line, bool fileContent) {
                     fileData += temp;
                 }
 
-                if (!fileData.empty()) {
+                if (fileData.empty()) {
                     emptyFile = false;
                 }
 
