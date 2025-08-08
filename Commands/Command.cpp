@@ -4,9 +4,17 @@
 #include <fstream>
 #include <filesystem>
 
+#include "../Exceptions/Exception.h"
+
 string Command::execute() {
-    if (checkOption(opt) == "ERROR") return "ERROR: option not found";
-    if (checkArgument(arg) == "ERROR") return "ERROR: argument not supported / Missing argument";
+    try {
+        checkOption(opt);
+        checkArgument(arg);
+    } catch (const Exception& e) {
+        cout << e.what() << endl;
+        return "";
+    }
+
     if (checkCreateFile(createFile) == "ERROR") return "ERROR: can't have >file with this command";
 
     if (createFile.empty()) return execute(arg);

@@ -17,6 +17,7 @@
 #include "../Commands/BuiltInCommands/Head.h"
 #include "../Commands/BuiltInCommands/Batch.h"
 #include "../Commands/BuiltInCommands/TR.h"
+#include "../Exceptions/BuiltInExceptions/UnknownCommandException.h"
 
 using namespace std;
 
@@ -38,7 +39,6 @@ public:
 
         bool readFileContent = !(command == "touch" || command == "truncate" || command == "rm");
         if (command != "tr") argument = getArgument(line, readFileContent);
-        if (argument == "ERROR") return nullptr;
 
         if(command == "echo") {
             if (argument == "" && emptyFile) argument = getMultipleLines();
@@ -80,7 +80,7 @@ public:
             Batch* batch = new Batch(option, argument, createFile);
             return batch;
         }
-        return nullptr;
+        throw UnknownCommandException(command);
     };
 
     static void pipeSystem(string& line);

@@ -11,8 +11,8 @@ protected:
     string execute(string argument) override;
     string checkOption(string opt) override;
 private:
-    int countWords(string argument);
-    int countCharacters(string argument);
+    int countWords(const string &argument);
+    int countCharacters(const string &argument);
 };
 
 #endif

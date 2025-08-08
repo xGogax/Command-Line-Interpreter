@@ -15,8 +15,9 @@ string Batch::execute(string argument) {
         if (line.empty()) continue;
 
         Command* command = Parser::parse(line);
-        if (command) {
-            result += command->execute() + "\n";
+        if (command != nullptr) {
+            string executedCommand = command->execute();
+            if (!executedCommand.empty()) result += executedCommand + "\n";
             delete command;
         }
     }

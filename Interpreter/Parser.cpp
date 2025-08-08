@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+#include "../Exceptions/BuiltInExceptions/FileOpenException.h"
+
 bool pipe = false;
 
 bool Parser::emptyFile = false;
@@ -208,8 +210,7 @@ string Parser::getArgument(string &line, bool fileContent) {
         if (fileContent) {
             ifstream file(fileName);
             if (!file.is_open()) {
-                cerr << "ERROR: Unable to open file " << fileName << endl;
-                return "ERROR";
+                throw FileOpenException(fileName);
             }
 
             string fileData;
@@ -241,8 +242,7 @@ string Parser::getArgument(string &line, bool fileContent) {
     if (fileContent) {
         ifstream file(fileName);
         if (!file.is_open()) {
-            cerr << "ERROR: Unable to open file " << fileName << endl;
-            return "ERROR";
+            throw FileOpenException(fileName);
         }
 
         string fileData;
@@ -325,9 +325,7 @@ string* Parser::getTRArguments(string &line, bool fileContent) {
             if (fileContent) {
                 ifstream file(fileName);
                 if (!file.is_open()) {
-                    cerr << "ERROR: Unable to open file " << fileName << endl;
-                    args[0] = "ERROR";
-                    return args;
+                    throw FileOpenException(fileName);
                 }
                 string fileData, temp;
                 while (getline(file, temp)) {
@@ -343,9 +341,7 @@ string* Parser::getTRArguments(string &line, bool fileContent) {
             if (fileContent) {
                 ifstream file(line);
                 if (!file.is_open()) {
-                    cerr << "ERROR: Unable to open file " << line << endl;
-                    args[0] = "ERROR";
-                    return args;
+                    throw FileOpenException(line);
                 }
                 string fileData, temp;
                 while (getline(file, temp)) {

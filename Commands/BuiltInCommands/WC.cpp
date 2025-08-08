@@ -2,7 +2,9 @@
 
 #include <sstream>
 
-int WC::countWords(string argument) {
+#include "../../Exceptions/BuiltInExceptions/OptionNotSupportedException.h"
+
+int WC::countWords(const string &argument) {
     if (argument.empty()) return 0;
 
     stringstream ss(argument);
@@ -15,7 +17,7 @@ int WC::countWords(string argument) {
 
     return count;
 }
-int WC::countCharacters(string argument) {
+int WC::countCharacters(const string &argument) {
     return argument.length();
 }
 
@@ -25,11 +27,9 @@ string WC::execute(string argument) {
     } else if (opt == "-c") {
         return to_string(countCharacters(argument));
     }
-    return "ERROR";
 }
 
 string WC::checkOption(string opt) {
-    if (opt == "-w") return opt;
-    else if (opt == "-c") return opt;
-    else return "ERROR";
+    if (opt != "-w" && opt != "-c") throw OptionNotSupportedException(opt, "wc");
+    return opt;
 }

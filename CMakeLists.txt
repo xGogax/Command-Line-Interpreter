@@ -31,4 +31,10 @@ add_executable(CommandLineInterpreter main.cpp
         Commands/BuiltInCommands/Batch.cpp
         Commands/BuiltInCommands/Batch.h
         Commands/BuiltInCommands/TR.cpp
-        Commands/BuiltInCommands/TR.h)
+        Commands/BuiltInCommands/TR.h
+        Exceptions/Exception.h
+        Exceptions/BuiltInExceptions/UnknownCommandException.h
+        Exceptions/BuiltInExceptions/FileOpenException.h
+        Exceptions/BuiltInExceptions/OptionNotSupportedException.h
+        Exceptions/BuiltInExceptions/ArgumentNotSupportedException.h
+)

@@ -6,6 +6,9 @@
 #include <sstream>
 using namespace std;
 
+#include "../../Exceptions/BuiltInExceptions/OptionNotSupportedException.h"
+#include "../../Exceptions/BuiltInExceptions/ArgumentNotSupportedException.h"
+
 string Time::execute(string argument) {
     time_t now = time(0);
     tm *localTime = localtime(&now);
@@ -19,16 +22,11 @@ string Time::execute(string argument) {
 }
 
 string Time::checkOption(string opt) {
-    if(opt.empty()) {
-        return opt;
-    }
-    //ERROR
-    return "ERROR";
+    if(!opt.empty()) throw OptionNotSupportedException(opt, "time");
+    else return opt;
 }
 
 string Time::checkArgument(string argument) {
-    if(argument.empty()) {
-        return "";
-    }
-    return "ERROR";
+    if (!argument.empty()) throw ArgumentNotSupportedException("time");
+    else return argument;
 }

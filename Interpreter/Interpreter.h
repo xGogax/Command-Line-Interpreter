@@ -25,10 +25,15 @@ public:
             }
             removeMultipleSpaces(input);
 
-            command = Parser::parse(input);
+            try {
+                command = Parser::parse(input);
 
-            if (command != nullptr) {
-                cout << command->execute() << endl;
+                if (command != nullptr) {
+                    string executedCommand = command->execute();
+                    if (!executedCommand.empty()) cout << executedCommand << endl;
+                }
+            } catch (const Exception& e) {
+                cout << e.what() << endl;
             }
         }
         delete command;

@@ -3,6 +3,9 @@
 #include <ctime>
 #include <iomanip>
 
+#include "../../Exceptions/BuiltInExceptions/OptionNotSupportedException.h"
+#include "../../Exceptions/BuiltInExceptions/ArgumentNotSupportedException.h"
+
 string Date::execute(string argument) {
     time_t now = time(0);
     tm *localTime = localtime(&now);
@@ -16,16 +19,11 @@ string Date::execute(string argument) {
 }
 
 string Date::checkOption(string opt) {
-    if(opt.empty()) {
-        return opt;
-    }
-    //ERROR
-    return "ERROR";
+    if(!opt.empty()) throw OptionNotSupportedException(opt, "date");
+    else return opt;
 }
 
 string Date::checkArgument(string argument) {
-    if (argument.empty()) {
-        return "";
-    }
-    return "ERROR";
+    if (!argument.empty()) throw ArgumentNotSupportedException("date");
+    else return argument;
 }

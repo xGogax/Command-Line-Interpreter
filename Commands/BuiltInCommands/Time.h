@@ -2,6 +2,7 @@
 #define TIME_H
 #include "../Command.h"
 
+
 class Time : public Command{
 public:
     Time(string opt, string argument, string createFile)
