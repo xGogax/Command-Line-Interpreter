@@ -11,8 +11,8 @@ string Date::execute(string argument) {
     tm *localTime = localtime(&now);
 
     stringstream ss;
-    ss << setfill('0') << setw(2) << localTime->tm_mday << "-"
-    << setfill('0') << setw(2) << (localTime->tm_mon + 1) << "-"
+    ss << setfill('0') << setw(2) << localTime->tm_mday << "."
+    << setfill('0') << setw(2) << (localTime->tm_mon + 1) << "."
     << setfill('0') << setw(4) << (localTime->tm_year + 1900);
 
     return ss.str();

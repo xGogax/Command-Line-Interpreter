@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "../../Exceptions/BuiltInExceptions/OptionNotSupportedException.h"
+#include "../../Exceptions/BuiltInExceptions/OptionHasToBeSupportedException.h"
 
 int WC::countWords(const string &argument) {
     if (argument.empty()) return 0;
@@ -30,6 +31,7 @@ string WC::execute(string argument) {
 }
 
 string WC::checkOption(string opt) {
+    if (opt.empty()) throw OptionHasToBeSupportedException("wc");
     if (opt != "-w" && opt != "-c") throw OptionNotSupportedException(opt, "wc");
     return opt;
 }

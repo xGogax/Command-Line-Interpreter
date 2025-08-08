@@ -37,4 +37,12 @@ add_executable(CommandLineInterpreter main.cpp
         Exceptions/BuiltInExceptions/FileOpenException.h
         Exceptions/BuiltInExceptions/OptionNotSupportedException.h
         Exceptions/BuiltInExceptions/ArgumentNotSupportedException.h
+        Exceptions/BuiltInExceptions/CreateFileNotSupportedException.h
+        Exceptions/BuiltInExceptions/ArgumentHasToBeSupportedException.h
+        Exceptions/BuiltInExceptions/OptionHasToBeSupportedException.h
+        Exceptions/BuiltInExceptions/FileAlreadyExistException.h
+        Exceptions/BuiltInExceptions/UnableToCreateFile.h
+        Exceptions/BuiltInExceptions/CommandFormatException.h
+        Exceptions/BuiltInExceptions/NumberCriteriaException.h
+        Exceptions/BuiltInExceptions/FileNotFoundException.h
 )

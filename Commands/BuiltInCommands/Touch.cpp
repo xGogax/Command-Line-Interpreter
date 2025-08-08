@@ -2,43 +2,42 @@
 
 #include <fstream>
 
+#include "../../Exceptions/BuiltInExceptions/OptionNotSupportedException.h"
+#include "../../Exceptions/BuiltInExceptions/ArgumentHasToBeSupportedException.h"
+#include "../../Exceptions/BuiltInExceptions/CreateFileNotSupportedException.h"
+#include "../../Exceptions/BuiltInExceptions/FileAlreadyExistException.h"
+#include "../../Exceptions/BuiltInExceptions/UnableToCreateFile.h"
+
 string Touch::execute(string argument) {
     ifstream checkFile(argument);
     if (checkFile.is_open()) {
         checkFile.close();
-        return "ERROR: File already exists";
+        throw FileAlreadyExistException(argument);
     }
 
     ofstream file(argument);
     if (file.is_open()) {
         file.close();
     } else {
-        return "ERROR: Unable to create file.";
+        throw UnableToCreateFile();
     }
 
     return "";
 }
 
 string Touch::checkOption(string opt) {
-    if(opt.empty()) {
-        return opt;
-    }
-    //ERROR
-    return "ERROR";
+    if(!opt.empty()) throw OptionNotSupportedException(opt, "truncate");
+    else return opt;
 }
 
 string Touch::checkCreateFile(string createFile) {
-    if(createFile.empty()) {
-        return "";
-    }
-    return "ERROR";
+    if(!createFile.empty()) throw CreateFileNotSupportedException("truncate");
+    else return createFile;
 }
 
 string Touch::checkArgument(string argument) {
-    if(argument.empty()) {
-        return "ERROR";
-    }
-    return "";
+    if (argument.empty()) throw ArgumentHasToBeSupportedException("truncate");
+    else return argument;
 }
 
 

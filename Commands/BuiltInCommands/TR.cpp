@@ -1,5 +1,7 @@
 #include "TR.h"
 
+#include "../../Exceptions/BuiltInExceptions/OptionNotSupportedException.h"
+
 string TR::execute(string argument) {
     string result = arg;
     size_t pos = 0;
@@ -18,6 +20,6 @@ string TR::execute(string argument) {
 
 
 string TR::checkOption(string opt) {
-    if (opt.empty()) return opt;
-    else return "ERROR";
+    if(!opt.empty()) throw OptionNotSupportedException(opt, "tr");
+    else return opt;
 }
