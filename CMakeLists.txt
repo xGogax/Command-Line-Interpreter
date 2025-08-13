@@ -45,4 +45,5 @@ add_executable(CommandLineInterpreter main.cpp
         Exceptions/BuiltInExceptions/CommandFormatException.h
         Exceptions/BuiltInExceptions/NumberCriteriaException.h
         Exceptions/BuiltInExceptions/FileNotFoundException.h
+        Exceptions/BuiltInExceptions/UnexpectedCharactersException.h
 )

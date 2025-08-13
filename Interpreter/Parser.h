@@ -18,6 +18,7 @@
 #include "../Commands/BuiltInCommands/Batch.h"
 #include "../Commands/BuiltInCommands/TR.h"
 #include "../Exceptions/BuiltInExceptions/UnknownCommandException.h"
+#include "../Exceptions/BuiltInExceptions/UnexpectedCharactersException.h"
 
 using namespace std;
 
@@ -30,6 +31,8 @@ public:
             return nullptr;
         }
 
+        string moreCharacters = line;
+
         string command;
         string option;
 
@@ -39,6 +42,8 @@ public:
 
         bool readFileContent = !(command == "touch" || command == "truncate" || command == "rm");
         if (command != "tr") argument = getArgument(line, readFileContent);
+
+        if (command != "tr" && !line.empty()) { throw UnexpectedCharactersException(moreCharacters, line); };
 
         if(command == "echo") {
             if (argument == "" && emptyFile) argument = getMultipleLines();
