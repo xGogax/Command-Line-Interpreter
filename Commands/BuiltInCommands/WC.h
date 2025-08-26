@@ -13,6 +13,7 @@ protected:
 private:
     int countWords(const string &argument);
     int countCharacters(const string &argument);
+    int countLines(const string &argument);
 };
 
 #endif
